@@ -1,4 +1,24 @@
-# HTML::Pipeline [![Build Status](https://secure.travis-ci.org/jch/html-pipeline.png)](http://travis-ci.org/jch/html-pipeline)
+# HTML::Pipeline, LinuxFr.org edition
+
+LinuxFr.org uses markdown as its wiki syntax, but with some differences with
+the standard markdown:
+
+ * the heading levels for titles range from `<h2>` to `<h5>`
+ * `[[Foobar]]` is transformed to a link to wikipedia (http://fr.wikipedia.org/wiki/Foobar)
+ * URL are automatically transformed in links
+ * words with several underscores are left unchanged (no italics)
+ * PHP Markdown Extra-style tables are supported
+ * external images are proxified
+ * and some other extensions
+
+To do that, I hacked the html-pipeline from Github to remove some
+dependencies and use custom filters.
+
+----
+
+The README.md of the original html-pipeline:
+
+# HTML::Pipeline
 
 GitHub HTML processing filters and utilities. This module includes a small
 framework for defining DOM based content filters and applying them to user

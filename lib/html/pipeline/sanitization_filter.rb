@@ -2,6 +2,7 @@ require 'sanitize'
 
 module HTML
   class Pipeline
+
     # HTML filter with sanization routines and whitelists. This module defines
     # what HTML is allowed in user provided content and fixes up issues with
     # unbalanced tags and whatnot.
@@ -102,5 +103,6 @@ module HTML
         context[:whitelist] || WHITELIST
       end
     end
+
   end
 end

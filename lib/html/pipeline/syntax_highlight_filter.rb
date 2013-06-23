@@ -1,33 +1,31 @@
-begin
-  require 'linguist'
-rescue LoadError
-  raise LoadError, "You need to install linguist before using the SyntaxHighlightFilter. See README.md for details"
-end
+require 'pygments'
 
 module HTML
   class Pipeline
+
     # HTML Filter that syntax highlights code blocks wrapped
     # in <pre lang="...">.
     class SyntaxHighlightFilter < Filter
       def call
-        doc.search('pre').each do |node|
-          next unless lang = node['lang']
+        doc.search('code').each do |node|
+          next unless lang = node['class']
           next unless lexer = Pygments::Lexer[lang]
           text = node.inner_text
 
           html = highlight_with_timeout_handling(lexer, text)
           next if html.nil?
 
-          node.replace(html)
+          node.child.replace(html)
         end
         doc
       end
 
       def highlight_with_timeout_handling(lexer, text)
-        lexer.highlight(text)
-      rescue Timeout::Error => boom
+        lexer.highlight(text, options: { nowrap: true })
+      rescue Timeout::Error
         nil
       end
     end
+
   end
 end

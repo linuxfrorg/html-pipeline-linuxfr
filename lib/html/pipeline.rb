@@ -26,22 +26,14 @@ module HTML
   class Pipeline
     autoload :VERSION,               'html/pipeline/version'
     autoload :Filter,                'html/pipeline/filter'
-    autoload :AbsoluteSourceFilter,  'html/pipeline/absolute_source_filter'
-    autoload :BodyContent,           'html/pipeline/body_content'
-    autoload :AutolinkFilter,        'html/pipeline/autolink_filter'
-    autoload :CamoFilter,            'html/pipeline/camo_filter'
-    autoload :EmailReplyFilter,      'html/pipeline/email_reply_filter'
-    autoload :EmojiFilter,           'html/pipeline/emoji_filter'
-    autoload :HttpsFilter,           'html/pipeline/https_filter'
-    autoload :ImageMaxWidthFilter,   'html/pipeline/image_max_width_filter'
-    autoload :MarkdownFilter,        'html/pipeline/markdown_filter'
-    autoload :MentionFilter,         'html/pipeline/@mention_filter'
-    autoload :PlainTextInputFilter,  'html/pipeline/plain_text_input_filter'
-    autoload :SanitizationFilter,    'html/pipeline/sanitization_filter'
-    autoload :SyntaxHighlightFilter, 'html/pipeline/syntax_highlight_filter'
-    autoload :TextileFilter,         'html/pipeline/textile_filter'
-    autoload :TableOfContentsFilter, 'html/pipeline/toc_filter'
     autoload :TextFilter,            'html/pipeline/text_filter'
+    autoload :MarkdownFilter,        'html/pipeline/markdown_filter'
+    autoload :TableOfContentsFilter, 'html/pipeline/toc_filter'
+    autoload :SyntaxHighlightFilter, 'html/pipeline/syntax_highlight_filter'
+    autoload :RelativeLinksFilter,   'html/pipeline/relative_links_filter'
+    autoload :CustomLinksFilter,     'html/pipeline/custom_links_filter'
+    autoload :SanitizationFilter,    'html/pipeline/sanitization_filter'
+    autoload :LinuxFr,               'html/pipeline/linuxfr'
 
     # Our DOM implementation.
     DocumentFragment = Nokogiri::HTML::DocumentFragment
@@ -170,29 +162,6 @@ module HTML
     # Returns a Hash.
     def default_payload(payload = {})
       {:pipeline => instrumentation_name}.merge(payload)
-    end
-  end
-end
-
-# XXX nokogiri monkey patches for 1.8
-if not ''.respond_to?(:force_encoding)
-  class Nokogiri::XML::Node
-    # Work around an issue with utf-8 encoded data being erroneously converted to
-    # ... some other shit when replacing text nodes. See 'utf-8 output 2' in
-    # user_content_test.rb for details.
-    def replace_with_encoding_fix(replacement)
-      if replacement.respond_to?(:to_str)
-        replacement = document.fragment("<div>#{replacement}</div>").children.first.children
-      end
-      replace_without_encoding_fix(replacement)
-    end
-
-    alias_method :replace_without_encoding_fix, :replace
-    alias_method :replace, :replace_with_encoding_fix
-
-    def swap(replacement)
-      replace(replacement)
-      self
     end
   end
 end
