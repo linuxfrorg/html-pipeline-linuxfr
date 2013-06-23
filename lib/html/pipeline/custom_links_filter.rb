@@ -1,3 +1,4 @@
+# encoding: utf-8
 module HTML
   class Pipeline
 
