@@ -11,13 +11,11 @@ module HTML
     class TableOfContentsFilter < Filter
 
       def call
-        length = 0
-        doc.traverse {|node| length += node.text.length if node.text? }
-        return doc unless length >= context[:toc_minimal_length]
-
         headers = Hash.new 0
-        nodeset = Nokogiri::XML::NodeSet.new doc.document
+        was = 2
+        toc = ""
         doc.css('h1, h2, h3, h4, h5, h6').each do |node|
+          level = node.name.scan(/\d/).first.to_i
           name = node.text.downcase
           name.gsub!(/[^\w\- ]/, '') # remove punctuation
           name.gsub!(' ', '-') # replace spaces with dash
@@ -26,15 +24,30 @@ module HTML
           uniq = (headers[name] > 0) ? "-#{headers[name]}" : ''
           headers[name] += 1
           node['id'] = "#{name}#{uniq}"
-          # TODO
-          li = doc.document.parse "<li><a href=\"##{name}#{uniq}\">#{node.inner_html}</a></li>"
-          nodeset << li.first
+          while was > level
+            toc << "</ul>\n</li>\n"
+            was -= 1
+          end
+          while was < level
+            toc << "<li>\n<ul>"
+            was += 1
+          end
+          toc << "<li><a href=\"##{name}#{uniq}\">#{node.inner_html}</a></li>"
         end
 
-        unless nodeset.empty?
+        length = 0
+        doc.traverse {|node| length += node.text.length if node.text? }
+        return doc unless length >= context[:toc_minimal_length]
+
+        while was > 1
+          toc << "</ul>\n</li>\n"
+          was -= 1
+        end
+
+        unless headers.empty?
           first_child = doc.child
-          first_child.add_previous_sibling(context[:toc_header])
-          first_child.add_previous_sibling('<ul class="toc">' + nodeset.to_html + '</ul>')
+          first_child.add_previous_sibling context[:toc_header]
+          first_child.add_previous_sibling "<ul class=\"toc\">#{toc}</ul>"
         end
         doc
       end
