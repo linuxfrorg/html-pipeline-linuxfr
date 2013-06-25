@@ -15,8 +15,15 @@ module HTML
           HTML::Pipeline::TableOfContentsFilter,
           HTML::Pipeline::SyntaxHighlightFilter,
           HTML::Pipeline::RelativeLinksFilter,
-          HTML::Pipeline::CustomLinksFilter
+          HTML::Pipeline::CustomLinksFilter,
+          HTML::Pipeline::SanitizationFilter
         ], CONTEXT
+        result = pipeline.call text
+        result[:output].to_s
+      end
+
+      def self.sanitize(text)
+        pipeline = HTML::Pipeline.new [HTML::Pipeline::SanitizationFilter], CONTEXT
         result = pipeline.call text
         result[:output].to_s
       end

@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'sanitize'
 
 module HTML
@@ -18,69 +19,31 @@ module HTML
     #
     # This filter does not write additional information to the context.
     class SanitizationFilter < Filter
-      LISTS     = Set.new(%w(ul ol).freeze)
-      LIST_ITEM = 'li'.freeze
-
-      # List of table child elements. These must be contained by a <table> element
-      # or they are not allowed through. Otherwise they can be used to break out
-      # of places we're using tables to contain formatted user content (like pull
-      # request review comments).
-      TABLE_ITEMS = Set.new(%w(tr td th).freeze)
-      TABLE       = 'table'.freeze
 
       # The main sanitization whitelist. Only these elements and attributes are
       # allowed through by default.
       WHITELIST = {
-        :elements => %w(
-          h1 h2 h3 h4 h5 h6 h7 h8 br b i strong em a pre code img tt
-          div ins del sup sub p ol ul table blockquote dl dt dd
-          kbd q samp var hr ruby rt rp li tr td th
-        ),
+        :output => :xhtml,
+        :elements => %w(a abbr b blockquote br cite code dd del dfn div dl dt em
+                        h1 h2 h3 h4 h5 h6 hr i img ins kbd li mark meter ol p pre
+                        q s samp small span strong sub sup table tbody td tfooter
+                        th thead tr time ul var video wbr),
         :remove_contents => ['script'],
         :attributes => {
-          'a' => ['href'],
-          'img' => ['src'],
-          'div' => ['itemscope', 'itemtype'],
-          :all  => ['abbr', 'accept', 'accept-charset',
-                    'accesskey', 'action', 'align', 'alt', 'axis',
-                    'border', 'cellpadding', 'cellspacing', 'char',
-                    'charoff', 'charset', 'checked', 'cite',
-                    'clear', 'cols', 'colspan', 'color',
-                    'compact', 'coords', 'datetime', 'dir',
-                    'disabled', 'enctype', 'for', 'frame',
-                    'headers', 'height', 'hreflang',
-                    'hspace', 'ismap', 'label', 'lang',
-                    'longdesc', 'maxlength', 'media', 'method',
-                    'multiple', 'name', 'nohref', 'noshade',
-                    'nowrap', 'prompt', 'readonly', 'rel', 'rev',
-                    'rows', 'rowspan', 'rules', 'scope',
-                    'selected', 'shape', 'size', 'span',
-                    'start', 'summary', 'tabindex', 'target',
-                    'title', 'type', 'usemap', 'valign', 'value',
-                    'vspace', 'width', 'itemprop']
+          :all         => ['data-after', 'data-id', 'id', 'title', 'class'],
+          'a'          => ['href', 'name'],
+          'blockquote' => ['cite'],
+          'img'        => ['alt', 'height', 'src', 'width'],
+          'q'          => ['cite'],
+          'time'       => ['datetime'],
+          'video'      => ['src']
         },
         :protocols => {
-          'a'   => {'href' => ['http', 'https', 'mailto', :relative, 'github-windows', 'github-mac']},
-          'img' => {'src'  => ['http', 'https', :relative]}
-        },
-        :transformers => [
-          # Top-level <li> elements are removed because they can break out of
-          # containing markup.
-          lambda { |env|
-            name, node = env[:node_name], env[:node]
-            if name == LIST_ITEM && !node.ancestors.any?{ |n| LISTS.include?(n.name) }
-              node.replace(node.children)
-            end
-          },
-
-          # Table child elements that are not contained by a <table> are removed.
-          lambda { |env|
-            name, node = env[:node_name], env[:node]
-            if TABLE_ITEMS.include?(name) && !node.ancestors.any? { |n| n.name == TABLE }
-              node.replace(node.children)
-            end
-          }
-        ]
+          'a'          => {'href' => ['ftp', 'http', 'https', 'irc', 'mailto', 'xmpp', :relative]},
+          'blockquote' => {'cite' => ['http', 'https', :relative]},
+          'img'        => {'src'  => ['http', 'https', :relative]},
+          'q'          => {'cite' => ['http', 'https', :relative]}
+        }
       }
 
       # A more limited sanitization whitelist. This includes all attributes,
@@ -92,9 +55,21 @@ module HTML
       # Strip all HTML tags from the document.
       FULL = { :elements => [] }
 
+      # Match unicode chars encoded on 4 bytes in UTF-8
+      MB4_REGEXP = /[^\u{9}-\u{999}]/
+
+      # Remove utf-8 characters encoded on 4 bytes,
+      # because MySQL doesn't handle them.
+      def encode_mb4(doc)
+        doc.search("text()").each do |node|
+          node.content = node.content.gsub(MB4_REGEXP) { |c| "&##{c.unpack('U')[0]};" }
+        end
+        doc
+      end
+
       # Sanitize markup using the Sanitize library.
       def call
-        Sanitize.clean_node!(doc, whitelist)
+        encode_mb4 Sanitize.clean_node!(doc, whitelist)
       end
 
       # The whitelist to use when sanitizing. This can be passed in the context
