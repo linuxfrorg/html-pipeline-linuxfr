@@ -56,7 +56,7 @@ module HTML
       FULL = { :elements => [] }
 
       # Match unicode chars encoded on 4 bytes in UTF-8
-      MB4_REGEXP = /[^\u{9}-\u{999}]/
+      MB4_REGEXP = /[^\u{9}-\u{ffff}]/
 
       # Remove utf-8 characters encoded on 4 bytes,
       # because MySQL doesn't handle them.
