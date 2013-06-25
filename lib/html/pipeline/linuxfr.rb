@@ -22,9 +22,10 @@ module HTML
         result[:output].to_s
       end
 
-      def self.sanitize(text)
-        pipeline = HTML::Pipeline.new [HTML::Pipeline::SanitizationFilter], CONTEXT
-        result = pipeline.call text
+      def self.sanitize(html)
+        return "" if html.nil?
+        pipeline = HTML::Pipeline.new [HTML::Pipeline::SanitizationFilter]
+        result = pipeline.call html
         result[:output].to_s
       end
     end
