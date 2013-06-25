@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'redcarpet'
+require 'cgi'
 
 module HTML
   class Pipeline

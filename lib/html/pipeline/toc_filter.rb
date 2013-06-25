@@ -12,9 +12,9 @@ module HTML
 
       def call
         headers = Hash.new 0
-        was = 2
+        was = 1
         toc = ""
-        doc.css('h1, h2, h3, h4, h5, h6').each do |node|
+        doc.css('h2, h3, h4, h5, h6').each do |node|
           level = node.name.scan(/\d/).first.to_i
           name = node.text.downcase
           name.gsub!(/[^\w\- ]/, '') # remove punctuation
@@ -24,15 +24,21 @@ module HTML
           uniq = (headers[name] > 0) ? "-#{headers[name]}" : ''
           headers[name] += 1
           node['id'] = "#{name}#{uniq}"
-          while was > level
-            toc << "</ul>\n</li>\n"
-            was -= 1
+
+          if was < level
+            while was < level
+              toc << "<ul>\n<li>"
+              was += 1
+            end
+          else
+            toc << "</li>\n"
+            while was > level
+              toc << "</ul></li>\n"
+              was -= 1
+            end
+            toc << "<li>"
           end
-          while was < level
-            toc << "<li>\n<ul>"
-            was += 1
-          end
-          toc << "<li><a href=\"##{name}#{uniq}\">#{node.inner_html}</a></li>"
+          toc << "<a href=\"##{name}#{uniq}\">#{node.inner_html}</a>"
         end
 
         length = 0
@@ -40,14 +46,15 @@ module HTML
         return doc unless length >= context[:toc_minimal_length]
 
         while was > 1
-          toc << "</ul>\n</li>\n"
+          toc << "</li>\n</ul>\n"
           was -= 1
         end
+        toc.sub!('<ul>', '<ul class="toc">')
 
         unless headers.empty?
           first_child = doc.child
           first_child.add_previous_sibling context[:toc_header]
-          first_child.add_previous_sibling "<ul class=\"toc\">#{toc}</ul>"
+          first_child.add_previous_sibling toc
         end
         doc
       end
