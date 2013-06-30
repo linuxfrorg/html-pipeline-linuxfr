@@ -29,7 +29,7 @@ module HTML
 
       def process_internal_wiki_links(text)
         base_url = "//#{context[:host]}/wiki"
-        text.gsub(LF_REGEXP, "<a href=\"#{base_url}/\1\" title=\"#{LF_TITLE}\">\\1</a>")
+        text.gsub(LF_REGEXP, "<a href=\"#{base_url}/\\1\" title=\"#{LF_TITLE}\">\\1</a>")
       end
 
       def process_wikipedia_links(text)
