@@ -17,9 +17,8 @@ module HTML
         doc.css('h2, h3, h4, h5, h6').each do |node|
           level = node.name.scan(/\d/).first.to_i
           name = node.text.downcase
-          name.gsub!(/[^\w\- ]/, '') # remove punctuation
+          name.gsub!(/[^\p{Word}\- ]/u, '') # remove punctuation
           name.gsub!(' ', '-') # replace spaces with dash
-          name = EscapeUtils.escape_uri(name) # escape extended UTF-8 chars
 
           uniq = (headers[name] > 0) ? "-#{headers[name]}" : ''
           headers[name] += 1
