@@ -41,10 +41,9 @@ module HTML
       def process_wikipedia_links(text)
         text.gsub(WP_REGEXP) do
           word = $1
-          escaped = word.gsub(/\(|\)|'/) {|x| "\\#{x}" }
           parts = word.split(":")
           parts.shift if %w(de en es eo wikt).include?(parts.first)
-          "<a href=\"http://fr.wikipedia.org/wiki/#{escaped}\" title=\"#{WP_TITLE}\")>#{parts.join ':'}</a>"
+          "<a href=\"http://fr.wikipedia.org/wiki/#{word}\" title=\"#{WP_TITLE}\")>#{parts.join ':'}</a>"
         end
       end
 
