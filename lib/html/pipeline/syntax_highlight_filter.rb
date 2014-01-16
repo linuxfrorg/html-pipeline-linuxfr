@@ -9,13 +9,18 @@ module HTML
       def call
         doc.search('code').each do |node|
           next unless lang = node['class']
-          next unless lexer = Pygments::Lexer[lang]
-          text = node.inner_text
+          lexer = Pygments::Lexer[lang]
 
-          html = highlight_with_timeout_handling(lexer, text)
-          next if html.nil?
+          if lexer
+            text = node.inner_text
 
-          node.child.replace(html)
+            html = highlight_with_timeout_handling(lexer, text)
+            next if html.nil?
+
+            node.child.replace(html)
+          else
+            node.remove_attribute 'class'
+          end
         end
         doc
       end
