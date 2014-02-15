@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "nokogiri",        "~> 1.4"
-  gem.add_dependency "redcarpet",       "~> 3.0"
+  gem.add_dependency "redcarpet",       "~> 3.1"
   gem.add_dependency "pygments.rb",     "~> 0.5"
   gem.add_dependency "sanitize",        "~> 2.0"
   gem.add_dependency "escape_utils",    "~> 1.0"

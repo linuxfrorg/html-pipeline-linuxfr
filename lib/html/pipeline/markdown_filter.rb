@@ -15,14 +15,15 @@ module HTML
         :fenced_code_blocks => true,
         :autolink           => true,
         :strikethrough      => true,
-        :superscript        => true
+        :superscript        => true,
+        :footnotes          => true,
       }
 
       HTML_OPTIONS = {
         :filter_html        => true,
         :no_styles          => true,
         :hard_wrap          => true,
-        :xhtml              => true
+        :xhtml              => true,
       }
 
       def initialize(extensions={})
