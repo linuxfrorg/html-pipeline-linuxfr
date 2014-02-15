@@ -30,7 +30,7 @@ module HTML
         super extensions.merge(HTML_OPTIONS)
       end
 
-      def header(text, header_level)
+      def header(text, header_level, anchor=nil)
         l = header_level + 1
         "<h#{l}>#{text}</h#{l}>\n"
       end
