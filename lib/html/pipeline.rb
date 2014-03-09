@@ -29,6 +29,7 @@ module HTML
     autoload :TextFilter,            'html/pipeline/text_filter'
     autoload :MarkdownFilter,        'html/pipeline/markdown_filter'
     autoload :TableOfContentsFilter, 'html/pipeline/toc_filter'
+    autoload :SVGTeX,                'html/pipeline/svgtex'
     autoload :SyntaxHighlightFilter, 'html/pipeline/syntax_highlight_filter'
     autoload :RelativeLinksFilter,   'html/pipeline/relative_links_filter'
     autoload :CustomLinksFilter,     'html/pipeline/custom_links_filter'

@@ -7,8 +7,6 @@ module HTML
 
     # LinuxFr Flavored Markdown
     class LFMarkdown < Redcarpet::Render::HTML
-      attr_accessor :image_class
-
       PARSER_OPTIONS = {
         :no_intra_emphasis  => true,
         :tables             => true,
@@ -62,13 +60,6 @@ module HTML
     #
     # This filter does not write any additional information to the context hash.
     class MarkdownFilter < TextFilter
-      def initialize(text, context = nil, result = nil)
-        super text, context, result
-        @text = @text.gsub "\r", ''
-      end
-
-      # Convert Markdown to HTML using the best available implementation
-      # and convert into a DocumentFragment.
       def call
         lfm = Redcarpet::Markdown.new LFMarkdown, LFMarkdown::PARSER_OPTIONS
         lfm.render @text

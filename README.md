@@ -9,6 +9,7 @@ the standard markdown:
  * words with several underscores are left unchanged (no italics)
  * PHP Markdown Extra-style tables are supported
  * external images are proxified
+ * `$ eqn $` and `$$ eqn $$` are transformed to SVG (TeX maths support)
  * and some other extensions
 
 To do that, I hacked the html-pipeline from Github to remove some

@@ -6,17 +6,19 @@ module HTML
       CONTEXT = {
         toc_minimal_length: 5000,
         toc_header: "<h2 class=\"sommaire\">Sommaire</h2>\n",
+        svgtex_url: "http://localhost:16000",
         host: "linuxfr.org"
       }
 
       def self.render(text)
         pipeline = HTML::Pipeline.new [
+          HTML::Pipeline::SVGTeX::PreFilter,
           HTML::Pipeline::MarkdownFilter,
           HTML::Pipeline::TableOfContentsFilter,
+          HTML::Pipeline::SVGTeX::PostFilter,
           HTML::Pipeline::SyntaxHighlightFilter,
           HTML::Pipeline::RelativeLinksFilter,
           HTML::Pipeline::CustomLinksFilter,
-          HTML::Pipeline::SanitizationFilter
         ], CONTEXT
         result = pipeline.call text
         result[:output].to_s

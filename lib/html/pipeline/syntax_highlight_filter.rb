@@ -4,7 +4,7 @@ module HTML
   class Pipeline
 
     # HTML Filter that syntax highlights code blocks wrapped
-    # in <pre lang="...">.
+    # in <code lang="...">.
     class SyntaxHighlightFilter < Filter
       def call
         doc.search('code').each do |node|
