@@ -29,7 +29,7 @@ module HTML
 
         # Code taken from gollum (http://github.com/github/gollum)
         def extract_code!
-          @text.gsub!(/^``` ?(.+?)\r?\n(.+?)\r?\n```\r?$/m) do
+          @text.gsub!(/^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m) do
             id = Digest::SHA1.hexdigest($2)
             @codemap[id] = { :lang => $1, :code => $2 }
             id
@@ -59,7 +59,7 @@ module HTML
             next unless eqn.sub!(/\A\{mathjax\} /, '')
             rsp = session.post(context[:svgtex_url], :q => eqn)
             if rsp.status == 200
-              node.replace "<img src='data:image/svg+xml;base64,#{Base64.encode64 rsp.body}' alt='#{CGI.escape_html eqn}' />"
+              node.replace "<img class='mathjax' src='data:image/svg+xml;base64,#{Base64.encode64 rsp.body}' alt='#{CGI.escape_html eqn}' />"
             else
               node.inner_text = eqn
             end
