@@ -15,11 +15,12 @@ module HTML
         end
 
         def call
-          extract_code!
+          extract_fenced_code!
+          extract_indented_code!
           @text.gsub!(/^\$\$([^$]+)\$\$\s*$/) do
             "\n\n```mathjax\n\\displaystyle{#{$1.gsub "\\", "\\\\\\\\"}}\n```\n\n"
           end
-          extract_code!
+          extract_fenced_code!
           @text.gsub!(/\$([^$\n]+)\$/) do
             "`{mathjax} #{$1}`"
           end
@@ -27,8 +28,16 @@ module HTML
           @text
         end
 
+        def extract_indented_code!
+          @text.gsub!(/(\A|^\r?\n)(((\t|\s{4}).*)+)\r?(\n$|\Z)/) do
+            id = Digest::SHA1.hexdigest($2)
+            @codemap[id] = { :code => $2 }
+            "\n#{id}"
+          end
+        end
+
         # Code taken from gollum (http://github.com/github/gollum)
-        def extract_code!
+        def extract_fenced_code!
           @text.gsub!(/^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m) do
             id = Digest::SHA1.hexdigest($2)
             @codemap[id] = { :lang => $1, :code => $2 }
