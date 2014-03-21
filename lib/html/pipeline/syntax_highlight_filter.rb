@@ -26,7 +26,7 @@ module HTML
       end
 
       def highlight_with_timeout_handling(lexer, text)
-        lexer.highlight(text, options: { nowrap: true })
+        lexer.highlight(text, options: { nowrap: true, startinline: true })
       rescue Timeout::Error
         nil
       end
