@@ -11,6 +11,7 @@ module HTML
         def initialize(text, context = nil, result = nil)
           super text, context, result
           @text = @text.gsub "\r", ''
+          @inline = {}
           @codemap = {}
         end
 
@@ -21,11 +22,20 @@ module HTML
             "\n\n```mathjax\n\\displaystyle{#{$1.gsub "\\", "\\\\\\\\"}}\n```\n\n"
           end
           extract_fenced_code!
+          extract_inline_code!
           @text.gsub!(/\$([^$\n]+)\$/) do
             "`{mathjax} #{$1}`"
           end
           reinsert_code!
           @text
+        end
+
+        def extract_inline_code!
+          @text.gsub!(/`(.*)`/) do
+            id = Digest::SHA1.hexdigest($1)
+            @inline[id] = $1
+            id
+          end
         end
 
         def extract_indented_code!
@@ -46,6 +56,9 @@ module HTML
         end
 
         def reinsert_code!
+          @inline.each do |id, code|
+            @text.gsub!(id) { "`#{code}`" }
+          end
           @codemap.each do |id, spec|
             @text.gsub!(id) { "```#{spec[:lang]}\n#{spec[:code]}\n```" }
           end
