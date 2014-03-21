@@ -38,7 +38,7 @@ module HTML
 
         def reinsert_code!
           @codemap.each do |id, spec|
-            @text.gsub!(id, "```#{spec[:lang]}\n#{spec[:code]}\n```")
+            @text.gsub!(id) { "```#{spec[:lang]}\n#{spec[:code]}\n```" }
           end
         end
       end
