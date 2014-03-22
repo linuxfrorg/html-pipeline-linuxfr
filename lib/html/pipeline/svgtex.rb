@@ -81,7 +81,7 @@ module HTML
             next unless eqn.sub!(/\A\{mathjax\} /, '')
             rsp = session.post(context[:svgtex_url], :q => eqn)
             if rsp.status == 200
-              node.replace "<img class='mathjax' src='data:image/svg+xml;base64,#{Base64.encode64 rsp.body}' alt='#{CGI.escape_html eqn}' />"
+              node.replace "<img style='display: inline; max-height: 1em;' class='mathjax' src='data:image/svg+xml;base64,#{Base64.encode64 rsp.body}' alt='#{CGI.escape_html eqn}' />"
             else
               node.inner_text = eqn
             end
