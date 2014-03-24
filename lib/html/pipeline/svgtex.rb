@@ -39,9 +39,10 @@ module HTML
         end
 
         def extract_indented_code!
-          @text.gsub!(/(\A|^\r?\n)(((\t|\s{4}).*)+)\r?(\n$|\Z)/) do
-            id = Digest::SHA1.hexdigest($2)
-            @codemap[id] = { :code => $2 }
+          @text.gsub!(/(\A|\n\r?\n)(((\t|\s{4}).*(\n|\Z))+)(\r?\n|\Z)/) do
+            code = $2.gsub(/^(\t|\s{4})/, '').sub(/\r?\n\Z/, '')
+            id = Digest::SHA1.hexdigest(code)
+            @codemap[id] = { :code => code }
             "\n#{id}"
           end
         end
