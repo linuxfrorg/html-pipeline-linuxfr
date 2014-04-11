@@ -8,6 +8,12 @@ module HTML
     class SVGTeX
 
       class PreFilter < TextFilter
+        BLOCK_SVGTEX  = /^\$\$([^$]+)\$\$\s*$/
+        INLINE_SVGTEX = /(?<!\p{Word})\$([^$\n]+)\$(?!\p{Word})/
+        INDENTED_CODE = /(\A|\n\r?\n)(((\t|\s{4}).*(\n|\Z))+)(\r?\n|\Z)/
+        FENCED_CODE   = /^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m
+        INLINE_CODE   = /`(.*)`/
+
         def initialize(text, context = nil, result = nil)
           super text, context, result
           @text = @text.gsub "\r", ''
@@ -18,12 +24,12 @@ module HTML
         def call
           extract_fenced_code!
           extract_indented_code!
-          @text.gsub!(/^\$\$([^$]+)\$\$\s*$/) do
+          @text.gsub!(BLOCK_SVGTEX) do
             "\n\n```mathjax\n\\displaystyle{#{$1.gsub "\\", "\\\\\\\\"}}\n```\n\n"
           end
           extract_fenced_code!
           extract_inline_code!
-          @text.gsub!(/\b\$([^$\n]+)\$\b/) do
+          @text.gsub!(INLINE_SVGTEX) do
             "`{mathjax} #{$1}`"
           end
           reinsert_code!
@@ -31,7 +37,7 @@ module HTML
         end
 
         def extract_inline_code!
-          @text.gsub!(/`(.*)`/) do
+          @text.gsub!(INLINE_CODE) do
             id = Digest::SHA1.hexdigest($1)
             @inline[id] = $1
             id
@@ -39,7 +45,7 @@ module HTML
         end
 
         def extract_indented_code!
-          @text.gsub!(/(\A|\n\r?\n)(((\t|\s{4}).*(\n|\Z))+)(\r?\n|\Z)/) do
+          @text.gsub!(INDENTED_CODE) do
             code = $2.gsub(/^(\t|\s{4})/, '').sub(/\r?\n\Z/, '')
             id = Digest::SHA1.hexdigest(code)
             @codemap[id] = { :code => code }
@@ -49,7 +55,7 @@ module HTML
 
         # Code taken from gollum (http://github.com/github/gollum)
         def extract_fenced_code!
-          @text.gsub!(/^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m) do
+          @text.gsub!(FENCED_CODE) do
             id = Digest::SHA1.hexdigest($2)
             @codemap[id] = { :lang => $1, :code => $2 }
             id
