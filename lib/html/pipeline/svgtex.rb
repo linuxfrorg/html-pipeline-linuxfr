@@ -23,7 +23,7 @@ module HTML
           end
           extract_fenced_code!
           extract_inline_code!
-          @text.gsub!(/\$([^$\n]+)\$/) do
+          @text.gsub!(/\b\$([^$\n]+)\$\b/) do
             "`{mathjax} #{$1}`"
           end
           reinsert_code!
