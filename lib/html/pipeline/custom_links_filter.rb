@@ -43,7 +43,7 @@ module HTML
           word = $1
           parts = word.split(":")
           parts.shift if %w(de en es eo wikt).include?(parts.first)
-          "<a href=\"http://fr.wikipedia.org/wiki/#{word}\" title=\"#{WP_TITLE}\")>#{parts.join ':'}</a>"
+          "<a href=\"https://fr.wikipedia.org/wiki/#{word}\" title=\"#{WP_TITLE}\")>#{parts.join ':'}</a>"
         end
       end
 
