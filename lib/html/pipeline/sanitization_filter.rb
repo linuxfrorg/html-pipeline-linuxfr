@@ -23,7 +23,6 @@ module HTML
       # The main sanitization whitelist. Only these elements and attributes are
       # allowed through by default.
       WHITELIST = {
-        :output => :xhtml,
         :elements => %w(a abbr b blockquote br cite code dd del dfn div dl dt em
                         h1 h2 h3 h4 h5 h6 hr i img ins kbd li mark meter ol p pre
                         q s samp small source span strong sub sup table tbody td
@@ -70,7 +69,7 @@ module HTML
 
       # Sanitize markup using the Sanitize library.
       def call
-        encode_mb4 Sanitize.clean_node!(doc, whitelist)
+        encode_mb4 Sanitize.node!(doc, whitelist)
       end
 
       # The whitelist to use when sanitizing. This can be passed in the context

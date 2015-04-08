@@ -29,19 +29,8 @@ class HTML::Pipeline::SanitizationFilterTest < Test::Unit::TestCase
     assert_no_match /onclick/, html
   end
 
-  def test_sanitizes_li_elements_not_contained_in_ul_or_ol
-    stuff = "a\n<li>b</li>\nc"
-    html  = SanitizationFilter.call(stuff).to_s
-    assert_equal "a\nb\nc", html
-  end
-
   def test_does_not_sanitize_li_elements_contained_in_ul_or_ol
     stuff = "a\n<ul><li>b</li></ul>\nc"
-    assert_equal stuff, SanitizationFilter.call(stuff).to_s
-  end
-
-  def test_github_specific_protocols_are_not_removed
-    stuff = '<a href="github-windows://spillthelog">Spill this yo</a> and so on'
     assert_equal stuff, SanitizationFilter.call(stuff).to_s
   end
 
