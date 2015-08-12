@@ -22,10 +22,17 @@ class HTML::Pipeline::SanitizationFilterTest < Test::Unit::TestCase
     assert_no_match /style/, html
   end
 
+  def test_removing_javascript_protocol
+    orig = %(<a href='javascript:alert(1)'>YO DAWG</a>)
+    html = SanitizationFilter.call(orig).to_s
+    assert_no_match /javascript/, html
+    assert_no_match /href/, html
+  end
+
   def test_removing_script_event_handler_attributes
     orig = %(<a onclick='javascript:alert(0)'>YO DAWG</a>)
     html = SanitizationFilter.call(orig).to_s
-    assert_no_match /javscript/, html
+    assert_no_match /javascript/, html
     assert_no_match /onclick/, html
   end
 

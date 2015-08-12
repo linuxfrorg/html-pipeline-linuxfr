@@ -14,6 +14,7 @@ module HTML
         pipeline = HTML::Pipeline.new [
           HTML::Pipeline::SVGTeX::PreFilter,
           HTML::Pipeline::MarkdownFilter,
+          HTML::Pipeline::SanitizationFilter,
           HTML::Pipeline::TableOfContentsFilter,
           HTML::Pipeline::SVGTeX::PostFilter,
           HTML::Pipeline::SyntaxHighlightFilter,
