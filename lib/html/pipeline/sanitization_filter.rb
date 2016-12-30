@@ -55,21 +55,9 @@ module HTML
       # Strip all HTML tags from the document.
       FULL = { :elements => [] }
 
-      # Match unicode chars encoded on 4 bytes in UTF-8
-      MB4_REGEXP = /[^\u{9}-\u{ffff}]/
-
-      # Remove utf-8 characters encoded on 4 bytes,
-      # because MySQL doesn't handle them.
-      def encode_mb4(doc)
-        doc.search("text()").each do |node|
-          node.content = node.content.gsub(MB4_REGEXP) { |c| "&##{c.unpack('U')[0]};" }
-        end
-        doc
-      end
-
       # Sanitize markup using the Sanitize library.
       def call
-        encode_mb4 Sanitize.node!(doc, whitelist)
+        Sanitize.node!(doc, whitelist)
       end
 
       # The whitelist to use when sanitizing. This can be passed in the context
