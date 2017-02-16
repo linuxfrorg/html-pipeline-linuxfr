@@ -10,7 +10,7 @@ module HTML
       class PreFilter < TextFilter
         BLOCK_SVGTEX  = /^\$\$([^$]+)\$\$\s*$/
         INLINE_SVGTEX = /(?<!\p{Word})\$([^$\n]+)\$(?!\p{Word})/
-        INDENTED_CODE = /(\A|\n\r?\n)(((\t|\s{4}).*(\n|\Z))+)(\r?\n|\Z)/
+        INDENTED_CODE = /(\A|\n\r?\n)(((\t| {4}).*(\n|\Z))+)(\r?\n|\Z)/
         FENCED_CODE   = /^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m
         INLINE_CODE   = /`(.*)`/
 
