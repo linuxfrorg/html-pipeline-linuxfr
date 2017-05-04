@@ -25,7 +25,7 @@ module HTML
           extract_fenced_code!
           extract_indented_code!
           @text.gsub!(BLOCK_SVGTEX) do
-            "\n\n```mathjax\n\\displaystyle{#{$1.gsub "\\", "\\\\\\\\"}}\n```\n\n"
+            "\n\n```mathjax\n\\displaystyle{#{$1}}\n```\n\n"
           end
           extract_fenced_code!
           extract_inline_code!
