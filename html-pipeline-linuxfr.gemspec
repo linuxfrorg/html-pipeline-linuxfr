@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pygments.rb",     "~> 1.1"
   gem.add_dependency "sanitize",        "~> 4.0"
   gem.add_dependency "escape_utils",    "~> 1.2"
-  gem.add_dependency "activesupport",   "~> 4.2"
+  gem.add_dependency "activesupport",   "~> 5.0"
   gem.add_dependency "patron",          "~> 0.8"
 
   gem.add_development_dependency "test-unit"
