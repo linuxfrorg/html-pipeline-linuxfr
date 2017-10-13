@@ -7,7 +7,7 @@ module HTML
     class CustomLinksFilter < Filter
 
       LF_REGEXP = /\[\[\[([ '\.:\-\p{Word}]+)\]\]\]/
-      WP_REGEXP = /\[\[([ '\.+:!\-\(\)\p{Word}]+)\]\]/
+      WP_REGEXP = /\[\[([ '\.+:!\-\/\(\)\p{Word}]+)\]\]/
 
       LF_TITLE = "Lien du wiki interne LinuxFr.org"
       WP_TITLE = "Définition Wikipédia"
