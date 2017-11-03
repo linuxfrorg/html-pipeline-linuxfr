@@ -12,7 +12,7 @@ module HTML
         INLINE_SVGTEX = /(?<!\p{Word})\$([^$\n]+)\$(?!\p{Word})/
         INDENTED_CODE = /(\A|\n\r?\n)(((\t| {4}).*(\n|\Z))+)(\r?\n|\Z)/
         FENCED_CODE   = /^``` ?(.*?)\r?\n(.+?)\r?\n```\r?$/m
-        INLINE_CODE   = /`(.*)`/
+        INLINE_CODE   = /`([\`]*)`/
 
         def initialize(text, context = nil, result = nil)
           super text, context, result
