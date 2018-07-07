@@ -16,7 +16,7 @@ module HTML
       IGNORE_PARENTS = %w(pre code a).to_set
 
       def call
-        doc.search('text()').each do |node|
+        doc.search('.//text()').each do |node|
           content = node.to_html
           next if !content.include?('[[')
           next if has_ancestor?(node, IGNORE_PARENTS)

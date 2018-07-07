@@ -50,14 +50,15 @@ module HTML
       # protocols, and transformers from WHITELIST but with a more locked down
       # set of allowed elements.
       LIMITED = WHITELIST.merge(
-        :elements => %w(b i strong em a pre code img ins del sup sub p ol ul li))
+        elements: %w[b i strong em a pre code img ins del sup sub p ol ul li]
+      )
 
       # Strip all HTML tags from the document.
-      FULL = { :elements => [] }
+      FULL = { elements: [] }.freeze
 
       # Sanitize markup using the Sanitize library.
       def call
-        Sanitize.node!(doc, whitelist)
+        Sanitize.clean_node!(doc, whitelist)
       end
 
       # The whitelist to use when sanitizing. This can be passed in the context
