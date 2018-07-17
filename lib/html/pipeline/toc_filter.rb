@@ -22,7 +22,7 @@ module HTML
 
           uniq = (headers[name] > 0) ? "-#{headers[name]}" : ''
           headers[name] += 1
-          node['id'] = "#{name}#{uniq}"
+          node['id'] = "toc-#{name}#{uniq}"
 
           if was < level
             while was < level
@@ -37,7 +37,7 @@ module HTML
             end
             toc << "<li>"
           end
-          toc << "<a href=\"##{name}#{uniq}\">#{node.inner_html}</a>"
+          toc << "<a href=\"#toc-#{name}#{uniq}\">#{node.inner_html}</a>"
         end
 
         length = 0
