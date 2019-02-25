@@ -39,7 +39,7 @@ module HTML
           'video'      => ['src', 'controls']
         },
         :protocols => {
-          'a'          => {'href' => ['ftp', 'http', 'https', 'irc', 'mailto', 'xmpp', 'ed2k', 'magnet', :relative]},
+          'a'          => {'href' => ['ftp', 'http', 'https', 'irc', 'mailto', 'xmpp', 'ed2k', 'magnet', 'tel', :relative]},
           'blockquote' => {'cite' => ['http', 'https', :relative]},
           'img'        => {'src'  => ['http', 'https', :relative]},
           'q'          => {'cite' => ['http', 'https', :relative]}
