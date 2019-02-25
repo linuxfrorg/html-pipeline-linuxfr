@@ -1,4 +1,8 @@
 # encoding: utf-8
+
+require_relative "filter"
+require_relative "sanitization_filter"
+
 module HTML
   class Pipeline
 
@@ -7,7 +11,12 @@ module HTML
         toc_minimal_length: 5000,
         toc_header: "<h2 class=\"sommaire\">Sommaire</h2>\n",
         svgtex_url: "http://localhost:16000",
-        host: "linuxfr.org"
+        host: "linuxfr.org",
+        whitelist: HTML::Pipeline::SanitizationFilter::WHITELIST.merge(
+          :protocols => {
+            'a'          => {'href' => ['tel']}
+              }
+        ),
       }
 
       def self.render(text)
