@@ -1,4 +1,3 @@
-# encoding: utf-8
 module HTML
   class Pipeline
 
@@ -8,9 +7,9 @@ module HTML
         toc_header: "<h2 class=\"sommaire\">Sommaire</h2>\n",
         svgtex_url: "http://localhost:16000",
         host: "linuxfr.org"
-      }
+      }.freeze
 
-      def self.render(text)
+      def self.render(text, context = {})
         pipeline = HTML::Pipeline.new [
           HTML::Pipeline::SVGTeX::PreFilter,
           HTML::Pipeline::MarkdownFilter,
@@ -18,10 +17,11 @@ module HTML
           HTML::Pipeline::TableOfContentsFilter,
           HTML::Pipeline::SVGTeX::PostFilter,
           HTML::Pipeline::SyntaxHighlightFilter,
+          HTML::Pipeline::NoFollowLinksFilter,
           HTML::Pipeline::RelativeLinksFilter,
           HTML::Pipeline::CustomLinksFilter,
         ], CONTEXT
-        result = pipeline.call text
+        result = pipeline.call text, context
         result[:output].to_s
       end
 

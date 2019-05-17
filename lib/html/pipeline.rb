@@ -31,6 +31,7 @@ module HTML
     autoload :TableOfContentsFilter, 'html/pipeline/toc_filter'
     autoload :SVGTeX,                'html/pipeline/svgtex'
     autoload :SyntaxHighlightFilter, 'html/pipeline/syntax_highlight_filter'
+    autoload :NoFollowLinksFilter,   'html/pipeline/no_follow_links_filter'
     autoload :RelativeLinksFilter,   'html/pipeline/relative_links_filter'
     autoload :CustomLinksFilter,     'html/pipeline/custom_links_filter'
     autoload :SanitizationFilter,    'html/pipeline/sanitization_filter'
